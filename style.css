@@ -35,8 +35,19 @@ nav ul li{
     font-size: 3mm;
 }
 .container{
-    min-height: 75vh;
+    min-height: 72vh;
     color: midnightblue;
+    background-color: black;
+    color: white;
+    font-family:'Verela Round', sans-serif;
+    display: flex;
+    width: 70%;
+    margin: 23px auto;
+    border-radius:12px ;
+    padding: 34px;
+    background-image: url('bg.jpg');
+    background-position:center;
+
     
 }
 .bottom{

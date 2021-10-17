@@ -2,25 +2,33 @@ console.log("Welcome to Spotify Clone Webapp")
 
 //Initialise the variables used
 let songIndex=0;
-let audioElement= new Audio('1.mp3');
+let audioElement= new Audio('songs/1.mp3');
 let masterPlay= document.getElementById('masterPlay');
 let myProgressBar= document.getElementById('myProgressBar');
 let gif= document.getElementById('gif');
-
+let masterSongName = document.getElementById('masterSongName');
+let songItems=Array.from(document.getElementsByClassName('songitem'));
 
 let songs= [
-    {songName:"a", filePath:"songs/1.mp3", coverPath:"covers/1.jpg"},
-    {songName:"b", filePath:"songs/2.mp3", coverPath:"covers/2.jpg"},
-    {songName:"c", filePath:"songs/3.mp3", coverPath:"covers/3.jpg"},
-    {songName:"d", filePath:"songs/4.mp3", coverPath:"covers/4.jpg"},
-    {songName:"e", filePath:"songs/5.mp3", coverPath:"covers/5.jpg"},
-    {songName:"f", filePath:"songs/6.mp3", coverPath:"covers/6.jpg"},
-    {songName:"g", filePath:"songs/7.mp3", coverPath:"covers/7.jpg"},
-    {songName:"h", filePath:"songs/8.mp3", coverPath:"covers/8.jpg"},
-    {songName:"i", filePath:"songs/9.mp3", coverPath:"covers/9.jpg"},
-    {songName:"j", filePath:"songs/10.mp3", coverPath:"covers/10.jpg"}
+    {songName:"Backbone Hardy Sandhu", filePath:"songs/1.mp3", coverPath:"covers/1.jpg"},
+    {songName:"Bapu Zimidar-Jassi Gill", filePath:"songs/2.mp3", coverPath:"covers/2.jpg"},
+    {songName:"Dilbaro- Raazi", filePath:"songs/3.mp3", coverPath:"covers/3.jpg"},
+    {songName:"Hawa Hawa", filePath:"songs/4.mp3", coverPath:"covers/4.jpg"},
+    {songName:"Tere Sang Yaara", filePath:"songs/5.mp3", coverPath:"covers/5.jpg"},
+    {songName:"Uska_Hi_Bana", filePath:"songs/6.mp3", coverPath:"covers/6.jpg"},
+    {songName:"raone", filePath:"songs/7.mp3", coverPath:"covers/7.jpg"},
+    {songName:"Rishte Naate", filePath:"songs/8.mp3", coverPath:"covers/8.jpg"},
+    {songName:"Tajdar-E-Haram", filePath:"songs/9.mp3", coverPath:"covers/9.jpg"},
+    {songName:"Aapke-Pyaar-Mein-Hum", filePath:"songs/10.mp3", coverPath:"covers/10.jpg"}
 
 ]
+
+
+songItems.forEach((element, i)=>{
+    console.log(Element,i);
+    element.getElementsByTagName("img")[0].src=songs[i].coverPath;
+    element.getElementsByClassName("songName")[0].innerText=songs[i].songName;
+})
 
 //Handle play pAUSE cLICK
 
@@ -35,11 +43,82 @@ masterPlay.addEventListener('click',()=>{
         audioElement.pause();
         masterPlay.classList.remove('fa-pause-circle');
         masterPlay.classList.add('fa-play-circle');
+        gif.style.opacity=0;
     }
 })
 
 //Listen to Event
 
-myProgressBar.addEventListener('timeupdate',()=>{
+audioElement.addEventListener('timeupdate',()=>{
     console.log('timeupdate');
+    //update seekbar
+    progress=parseInt((audioElement.currentTime/audioElement.duration)*100);
+    myProgressBar.value=progress;
+})
+
+
+//Seekbar-controlling song timer
+
+myProgressBar.addEventListener('change',()=>{
+    audioElement.currentTime=myProgressBar.value * audioElement.duration/100;
+})
+
+const makeAllPlays=()=>{
+    Array.from(document.getElementsByClassName('songItemPlay')).forEach((element)=>{
+        element.classList.remove('fa-pause-circle');
+        element.classList.add('fa-play-circle');
+    })
+}
+
+
+Array.from(document.getElementsByClassName('songItemPlay')).forEach((element)=>{
+    element.addEventListener('click',(e)=>{
+        // console.log(e.target);
+        makeAllPlays();
+        songIndex=parseInt(e.target.id);
+        e.target.classList.remove('fa-play-circle');
+        e.target.classList.add('fa-pause-circle');
+
+        audioElement.src=`songs/${songIndex+1}.mp3`;
+        masterSongName.innerText=songs[songIndex].songName;
+        audioElement.currentTime=0;
+        audioElement.play();
+        gif.style.opacity=1;
+        masterPlay.classList.remove('fa-play-circle');
+        masterPlay.classList.add('fa-pause-circle');
+    
+
+    })
+})
+
+
+document.getElementById('next').addEventListener('click', ()=>{
+    if(songIndex>=9){
+        songIndex = 0
+    }
+    else{
+        songIndex += 1;
+    }
+    audioElement.src = `songs/${songIndex+1}.mp3`;
+    masterSongName.innerText = songs[songIndex].songName; //
+    audioElement.currentTime = 0;
+    audioElement.play();
+    masterPlay.classList.remove('fa-play-circle');
+    masterPlay.classList.add('fa-pause-circle');
+
+})
+//previous song button
+document.getElementById('previous').addEventListener('click', ()=>{
+    if(songIndex<=0){
+        songIndex = 0
+    }
+    else{
+        songIndex -= 1;
+    }
+    audioElement.src = `songs/${songIndex+1}.mp3`;
+    masterSongName.innerText = songs[songIndex].songName; //
+    audioElement.currentTime = 0;
+    audioElement.play();
+    masterPlay.classList.remove('fa-play-circle');
+    masterPlay.classList.add('fa-pause-circle');
 })
